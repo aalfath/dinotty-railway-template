@@ -34,7 +34,7 @@ Nothing else is required. To give coding agents an API key without logging in in
 
 - **Security:** anyone with the token gets a shell on the service (user `dinotty`, with passwordless `sudo` inside the container). Keep the token secret. Web previews (`/preview/<port>/`), the API and MCP all need the token or a signed-in browser.
 - **Persistence:** only `/home/dinotty` is kept. Packages installed with `sudo apt-get` are lost on redeploy; install tools with `npm install -g`, into `~/.local/bin`, or rebuild from a fork of this repo with them in the `Dockerfile`.
-- **Memory:** Dinotty itself uses about 25 MB. Measured on Railway with a 0.5 GB limit: installing Claude Code peaked at about 270 MB, and the Claude Code TUI used about 160 MB, with no out-of-memory kill. Running several agents at once, or heavy builds, needs Hobby or higher with more RAM.
+- **Memory:** Dinotty itself uses about 25 MB. Measured on Railway with a 0.5 GB limit: installing Claude Code peaked at about 270 MB and its TUI used about 160 MB; Codex and opencode also installed, with no out-of-memory kill. opencode's installer is the heaviest (it copies a 215 MB binary) and was killed once in a local 512 MB test: if an install stops with `Killed`, run it again. Several agents at once, or heavy builds, need Hobby or higher with 1 GB or more.
 - **No Docker inside:** Railway has no privileged containers, so Docker-in-Docker and agent sandboxes that need Docker don't work. The optional Tauri desktop app isn't part of this template; it can connect to this server as a remote server.
 - If the server process stops for any reason, the container exits non-zero so Railway restarts it (restart policy *On failure*).
 
