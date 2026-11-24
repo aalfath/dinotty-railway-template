@@ -25,8 +25,13 @@ if [ "$(stat -c %u "$HOME_DIR")" != "1001" ] || [ ! -f "$HOME_DIR/.dinotty-volum
   touch "$HOME_DIR/.dinotty-volume-ready"
   chown 1001:1001 "$HOME_DIR/.dinotty-volume-ready"
 fi
+# Create every folder level explicitly (install -d gives parents root:root) and
+# repair the ownership of these top-level folders on every boot.
 install -d -o 1001 -g 1001 -m 0700 "$HOME_DIR/.config" "$CFG_DIR"
-install -d -o 1001 -g 1001 "$HOME_DIR/workspace" "$HOME_DIR/.npm-global" "$HOME_DIR/.local/bin"
+install -d -o 1001 -g 1001 "$HOME_DIR/workspace" "$HOME_DIR/.npm-global" \
+  "$HOME_DIR/.local" "$HOME_DIR/.local/bin" "$HOME_DIR/.local/share" "$HOME_DIR/.cache"
+chown 1001:1001 "$HOME_DIR" "$HOME_DIR/.config" "$CFG_DIR" "$HOME_DIR/workspace" \
+  "$HOME_DIR/.npm-global" "$HOME_DIR/.local" "$HOME_DIR/.local/bin" "$HOME_DIR/.local/share" "$HOME_DIR/.cache"
 
 # The Railway variable is the source of truth for the login token.
 umask 077
